@@ -114,6 +114,18 @@ pip install plato-edge
 python -m pytest tests/
 ```
 
+## Related repos
+
+One of the Cocapn fleet's edge packages. Siblings with a real overlap:
+
+- **[edge-relay-agent](https://github.com/SuperInstance/edge-relay-agent)** —
+  its discovery/bandwidth roles overlap this package's `keeper` (UDP discovery
+  beacon) and `flywheel` (in-memory pub/sub).
+- **[marine-gpu-edge](https://github.com/SuperInstance/marine-gpu-edge)** —
+  targets the same NVIDIA Jetson Orin (ARM64) hardware.
+- **[Edge-Native](https://github.com/SuperInstance/Edge-Native)** — the
+  Jetson-side bytecode/firmware layer for the same device family.
+
 ## License
 
 MIT

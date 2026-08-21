@@ -57,9 +57,18 @@ class Beacon:
         """Start listening for pings."""
         if self._running:
             return
-        self._running = True
         sock = self._get_socket()
-        sock.bind((bind, self._port))
+        try:
+            sock.bind((bind, self._port))
+        except (OSError, OverflowError):
+            # OverflowError (out-of-range port) is not a subclass of OSError.
+            self._sock = None
+            try:
+                sock.close()
+            except OSError:
+                pass
+            raise
+        self._running = True
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
 
