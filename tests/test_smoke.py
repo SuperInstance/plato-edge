@@ -126,6 +126,25 @@ class TestKeeper:
         with pytest.raises(OverflowError):
             b.start()
 
+    def test_start_failure_does_not_latch(self):
+        # A failed start() must roll back partial state so the Beacon is
+        # not left latched as "running" with a dangling open socket and
+        # unable to be retried or cleanly discarded.
+        b = Beacon(port=99999)
+        with pytest.raises(OverflowError):
+            b.start()
+        assert b._running is False
+        assert b._sock is None
+        # stop() must remain a safe no-op after a failed start.
+        b.stop()
+        # And the instance must be reusable on a valid port.
+        b2 = Beacon(port=0)
+        try:
+            b2.start()
+            assert b2._running is True
+        finally:
+            b2.stop()
+
 
 class TestExplain:
     def test_trace_id(self):
